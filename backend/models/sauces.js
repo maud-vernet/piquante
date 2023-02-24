@@ -8,10 +8,10 @@ const sauceSchema = mongoose.Schema({
   mainPepper: { type: String, required: true },
   imageUrl: { type: String, required: true },
   heat: { type: Number, required: true },
-  likes: { type: Number, required: true },
-  dislikes: { type: Number, required: true },
-  userLiked: { type: [String], required: true },
-  userDisliked: { type: [String], required: true },
+  likes: { type: Number, default: 0 },
+  dislikes: { type: Number, default: 0 },
+  userLiked: { type: [String] },
+  userDisliked: { type: [String] },
 });
 
 module.exports = mongoose.model('Sauce', sauceSchema);
