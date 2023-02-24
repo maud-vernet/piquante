@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/users');
-const uniqueValidator = require('mongoose-unique-validator');
 const jwt = require('jsonwebtoken');
 
 exports.login = (req, res, next) => {
