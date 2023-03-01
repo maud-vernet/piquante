@@ -112,6 +112,9 @@ exports.likeSauce = (req, res, next) => {
             // si le user a déjà liké cette sauce, on lui envoie un message
           } else if (sauce.usersLiked.includes(userId)){
             return res.status(401).json({ message: "Vous avez déjà aimé cette sauce." })
+            // si le user a déjà disliké cette sauce, on lui envoie un message
+          } else if (sauce.usersdsliked.includes(userId)){
+            return res.status(401).json({ message: "Vous ne pouvez pas aimer cette sauce car vous l'avez déjà dislikée. Annulez votre premier vote avant de liker." })
           }
         }
         // le user dislike 
@@ -123,14 +126,18 @@ exports.likeSauce = (req, res, next) => {
               { _id: req.params.id},
               { 
                 // ajoute l'id de l'utilisateur au tableau des likes
-                $push: { usersdisliked: userId },
+                $push: { usersDisliked: userId },
                 //on ajoute un like au compteur
                 $inc: { dislikes: +1 }
             })
             .then(() => res.status(200).json({message : 'Sauce dislikée !'}))
             .catch(error => res.status(401).json({ error }));
+            // si le user a déjà disliké cette sauce, on lui envoie un message
           } else if (sauce.usersdisliked.includes(userId)) {
             return res.status(401).json({ message: "Vous avez déjà disliké cette sauce." })
+            // si le user a déjà liké cette sauce, on lui envoie un message
+          } else if (sauce.usersLiked.includes(userId)) {
+            return res.status(401).json({ message: "Vous ne pouvez pas disliker cette sauce car vous l'avez déjà likée. Annulez votre premier vote avant de disliker." })
           }
         }
         // le user annule son like/dislike
