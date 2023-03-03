@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
-var mongodbErrorHandler = require('mongoose-mongodb-errors');
+const mongodbErrorHandler = require('mongoose-mongodb-errors');
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
