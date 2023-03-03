@@ -65,12 +65,15 @@ exports.modifySauce = (req, res, next) => {
       if (sauce.userId !== req.auth.userId) {
         res.status(401).json({ message: "Not authorized" });
       } else {
-        Sauce.updateOne(
-          { _id: req.params.id },
-          { ...sauceObject, _id: req.params.id }
-        )
-          .then(() => res.status(200).json({ message: "Sauce modifiée !" }))
-          .catch((error) => res.status(401).json({ error }));
+        const filename = sauce.imageUrl.split("/images/")[1];
+        fs.unlink(`images/${filename}`, () => {
+          Sauce.updateOne(
+            { _id: req.params.id },
+            { ...sauceObject, _id: req.params.id }
+          )
+            .then(() => res.status(200).json({ message: "Sauce modifiée !" }))
+            .catch((error) => res.status(401).json({ error }));
+        });
       }
     })
     .catch((error) => {
@@ -129,12 +132,10 @@ exports.likeSauce = (req, res, next) => {
             .json({ message: "Vous avez déjà aimé cette sauce." });
           // si le user a déjà disliké cette sauce, on lui envoie un message
         } else if (sauce.usersdsliked.includes(userId)) {
-          return res
-            .status(401)
-            .json({
-              message:
-                "Vous ne pouvez pas aimer cette sauce car vous l'avez déjà dislikée. Annulez votre premier vote avant de liker.",
-            });
+          return res.status(401).json({
+            message:
+              "Vous ne pouvez pas aimer cette sauce car vous l'avez déjà dislikée. Annulez votre premier vote avant de liker.",
+          });
         }
       }
       // le user dislike
@@ -160,12 +161,10 @@ exports.likeSauce = (req, res, next) => {
             .json({ message: "Vous avez déjà disliké cette sauce." });
           // si le user a déjà liké cette sauce, on lui envoie un message
         } else if (sauce.usersLiked.includes(userId)) {
-          return res
-            .status(401)
-            .json({
-              message:
-                "Vous ne pouvez pas disliker cette sauce car vous l'avez déjà likée. Annulez votre premier vote avant de disliker.",
-            });
+          return res.status(401).json({
+            message:
+              "Vous ne pouvez pas disliker cette sauce car vous l'avez déjà likée. Annulez votre premier vote avant de disliker.",
+          });
         }
       }
       // le user annule son like/dislike
