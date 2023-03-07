@@ -17,4 +17,11 @@ const storage = multer.diskStorage({
   },
 });
 
-module.exports = multer({ storage: storage }).single("image");
+const fileFilter = (req, file, callback) => {
+  if(!(file.mimetype in MIME_TYPES)) {
+      return callback(new Error('Seules les images en jpg jpeg et png sont autorisées'))
+  }
+  callback(null, true)
+}
+
+module.exports = multer({ storage: storage, fileFilter: fileFilter }).single("image");
